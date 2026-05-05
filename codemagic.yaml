@@ -1,0 +1,54 @@
+workflows:
+  ios-native-workflow:
+    name: iOS Native
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: ZeuphaseCheck
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.evaprotkova
+      vars:
+        BUNDLE_ID: "com.evaprotkova"
+        XCODE_WORKSPACE: "PhaseCheck.xcodeproj/project.xcworkspace"
+        XCODE_SCHEME: "PhaseCheck"
+        APP_STORE_APPLE_ID: 6766565672
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: List available provisioning profiles
+        script: |
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
+      - name: List files to verify path
+        script: ls -R /Users/builder/clone/
+      - name: Set up provisioning profiles settings on Xcode project
+        script: xcode-project use-profiles
+      - name: Obfuscate Swift code
+        script: |
+          find . -name "*.swift" -print0 | xargs -0 sed -i '' -e 's/\b(\w+)\b/$1_obf/g'
+      - name: Build ipa for distribution
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      email:
+        recipients:
+          - storozhko1999@gmail.com
+        notify:
+          success: true
+          failure: true
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - QA
+        submit_to_app_store: true
+        cancel_previous_submissions: true
+        release_type: MANUAL
