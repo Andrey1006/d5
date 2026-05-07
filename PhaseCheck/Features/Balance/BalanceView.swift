@@ -96,6 +96,9 @@ struct BalanceView: View {
     @ViewBuilder
     private func reportCard(_ project: Project) -> some View {
         let r = report(project)
+        let maxPhase = PhaseLine.allCases.map { r.ampsByPhase[$0] ?? 0 }.max() ?? 0
+        let suggestedBreaker = BalanceCalculator.suggestedBreakerAmps(forPhaseCurrentAmps: maxPhase)
+        let suggestedCable = suggestedBreaker.flatMap { BalanceCalculator.suggestedCopperCableMm2(forBreakerAmps: $0) }
         PCCard(topAccent: PCColor.status(r.status)) {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
@@ -107,6 +110,21 @@ struct BalanceView: View {
                 }
                 Text("Imbalance: \(BalanceCalculator.formatPercent(r.imbalancePercent))")
                     .foregroundStyle(PCColor.secondaryText)
+                Text("Neutral: \(BalanceCalculator.formatA(r.neutralCurrentAmps))")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(PCColor.secondaryText)
+                if let suggestedBreaker {
+                    HStack(spacing: 8) {
+                        Text("Suggested breaker: \(Int(suggestedBreaker)) A")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(PCColor.dataBlue)
+                        if let suggestedCable {
+                            Text("Cu: \(String(format: "%.1f", suggestedCable)) mm² (rough)")
+                                .font(.caption)
+                                .foregroundStyle(PCColor.secondaryText)
+                        }
+                    }
+                }
                 if !r.warnings.isEmpty {
                     ForEach(r.warnings, id: \.self) { w in
                         Text("⚠️ " + w)

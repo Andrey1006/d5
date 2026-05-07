@@ -89,6 +89,9 @@ struct DashboardView: View {
     @ViewBuilder
     private func balanceCard(_ project: Project) -> some View {
         let report = BalanceCalculator.report(loads: project.loads, context: project.context, thresholds: store.settings.thresholds)
+        let maxPhase = PhaseLine.allCases.map { report.ampsByPhase[$0] ?? 0 }.max() ?? 0
+        let suggestedBreaker = BalanceCalculator.suggestedBreakerAmps(forPhaseCurrentAmps: maxPhase)
+        let suggestedCable = suggestedBreaker.flatMap { BalanceCalculator.suggestedCopperCableMm2(forBreakerAmps: $0) }
         PCCard(topAccent: PCColor.status(report.status)) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
@@ -106,6 +109,22 @@ struct DashboardView: View {
                 Text("Imbalance: \(BalanceCalculator.formatPercent(report.imbalancePercent))")
                     .font(.subheadline.monospacedDigit())
                     .foregroundStyle(PCColor.secondaryText)
+                HStack {
+                    Text("Neutral: \(BalanceCalculator.formatA(report.neutralCurrentAmps))")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(PCColor.secondaryText)
+                    Spacer()
+                    if let suggestedBreaker {
+                        Text("Breaker ≈ \(Int(suggestedBreaker)) A")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(PCColor.dataBlue)
+                    }
+                    if let suggestedCable {
+                        Text("Cu ≈ \(String(format: "%.1f", suggestedCable)) mm²")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(PCColor.secondaryText)
+                    }
+                }
                 if !report.warnings.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
                         ForEach(report.warnings, id: \.self) { w in

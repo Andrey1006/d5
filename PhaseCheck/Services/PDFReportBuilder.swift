@@ -5,6 +5,9 @@ import UIKit
 enum PDFReportBuilder {
     static func buildProjectReport(project: Project, settings: ThresholdSettings) throws -> URL {
         let report = BalanceCalculator.report(loads: project.loads, context: project.context, thresholds: settings)
+        let maxPhase = PhaseLine.allCases.map { report.ampsByPhase[$0] ?? 0 }.max() ?? 0
+        let suggestedBreaker = BalanceCalculator.suggestedBreakerAmps(forPhaseCurrentAmps: maxPhase)
+        let suggestedCable = suggestedBreaker.flatMap { BalanceCalculator.suggestedCopperCableMm2(forBreakerAmps: $0) }
         let page = CGRect(x: 0, y: 0, width: 595, height: 842)
         let format = UIGraphicsPDFRendererFormat()
         let renderer = UIGraphicsPDFRenderer(bounds: page, format: format)
@@ -40,6 +43,14 @@ enum PDFReportBuilder {
             }
             y += 8
             draw("Imbalance: \(BalanceCalculator.formatPercent(report.imbalancePercent)) · status: \(String(describing: report.status))")
+            draw("Neutral (ideal): \(BalanceCalculator.formatA(report.neutralCurrentAmps))")
+            if let suggestedBreaker {
+                var line = "Suggested breaker (rough): \(Int(suggestedBreaker)) A"
+                if let suggestedCable {
+                    line += " · Cu cable (rough): \(String(format: "%.1f", suggestedCable)) mm²"
+                }
+                draw(line)
+            }
             y += 8
             draw("Currents by phase:", titleAttrs)
             for p in PhaseLine.allCases {
