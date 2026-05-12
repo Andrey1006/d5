@@ -2,9 +2,46 @@
 import Foundation
 
 enum InputValidation {
+    private static let maxTagsPerLoad = 12
+    private static let maxTagLength = 24
+
     static func sanitizedName(_ raw: String, fallback: String) -> String {
         let t = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         return t.isEmpty ? fallback : t
+    }
+
+    static func parsedTags(from commaSeparated: String) -> [String] {
+        commaSeparated
+            .split { $0 == "," || $0 == ";" }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
+    static func normalizeTags(from commaSeparated: String) -> [String] {
+        var out: [String] = []
+        var seenLower = Set<String>()
+        for raw in parsedTags(from: commaSeparated) {
+            let t = String(raw.prefix(maxTagLength))
+            if t.isEmpty { continue }
+            let key = t.lowercased()
+            if seenLower.contains(key) { continue }
+            seenLower.insert(key)
+            out.append(t)
+            if out.count >= maxTagsPerLoad { break }
+        }
+        return out
+    }
+
+    static func validateTags(_ tags: [String]) -> String? {
+        if tags.count > maxTagsPerLoad {
+            return "At most \(maxTagsPerLoad) tags per load."
+        }
+        for t in tags {
+            if t.count > maxTagLength {
+                return "Each tag must be at most \(maxTagLength) characters."
+            }
+        }
+        return nil
     }
 
     static func validate(project: Project) -> String? {
@@ -38,6 +75,7 @@ enum InputValidation {
         if load.connectionKind == .singlePhase, context.lineToNeutralVoltageVolts <= 0 {
             return "Single-phase loads require line-to-neutral voltage greater than 0 in the project."
         }
+        if let err = validateTags(load.tags) { return err }
         return nil
     }
 }

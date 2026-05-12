@@ -6,8 +6,41 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FADC2F222FB3654600AA77EE /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = FADC2F212FB3654600AA77EE /* FirebaseCore */; };
+		FADC2F242FB3654600AA77EE /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = FADC2F232FB3654600AA77EE /* FirebaseRemoteConfig */; };
+		FADC2F272FB3655500AA77EE /* AppsFlyerLib-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = FADC2F262FB3655500AA77EE /* AppsFlyerLib-Dynamic */; };
+		FADC2F2A2FB3657500AA77EE /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = FADC2F292FB3657500AA77EE /* FirebaseMessaging */; };
+		FADC2F362FB365AD00AA77EE /* NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FADC2F2F2FB365AD00AA77EE /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FADC2F342FB365AD00AA77EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27DD28772FA277E200A9C851 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FADC2F2E2FB365AD00AA77EE;
+			remoteInfo = NotificationService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FADC2F3B2FB365AD00AA77EE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FADC2F362FB365AD00AA77EE /* NotificationService.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		27DD287F2FA277E200A9C851 /* PhaseCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhaseCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FADC2F2F2FB365AD00AA77EE /* NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -17,6 +50,13 @@
 				Info.plist,
 			);
 			target = 27DD287E2FA277E200A9C851 /* PhaseCheck */;
+		};
+		FADC2F3A2FB365AD00AA77EE /* Exceptions for "NotificationService" folder in "NotificationService" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = FADC2F2E2FB365AD00AA77EE /* NotificationService */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -29,10 +69,29 @@
 			path = PhaseCheck;
 			sourceTree = "<group>";
 		};
+		FADC2F302FB365AD00AA77EE /* NotificationService */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FADC2F3A2FB365AD00AA77EE /* Exceptions for "NotificationService" folder in "NotificationService" target */,
+			);
+			path = NotificationService;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		27DD287C2FA277E200A9C851 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FADC2F2A2FB3657500AA77EE /* FirebaseMessaging in Frameworks */,
+				FADC2F272FB3655500AA77EE /* AppsFlyerLib-Dynamic in Frameworks */,
+				FADC2F222FB3654600AA77EE /* FirebaseCore in Frameworks */,
+				FADC2F242FB3654600AA77EE /* FirebaseRemoteConfig in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FADC2F2C2FB365AD00AA77EE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				27DD28812FA277E200A9C851 /* PhaseCheck */,
+				FADC2F302FB365AD00AA77EE /* NotificationService */,
+				FADC2F282FB3657500AA77EE /* Frameworks */,
 				27DD28802FA277E200A9C851 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,8 +115,16 @@
 			isa = PBXGroup;
 			children = (
 				27DD287F2FA277E200A9C851 /* PhaseCheck.app */,
+				FADC2F2F2FB365AD00AA77EE /* NotificationService.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FADC2F282FB3657500AA77EE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -68,20 +137,48 @@
 				27DD287B2FA277E200A9C851 /* Sources */,
 				27DD287C2FA277E200A9C851 /* Frameworks */,
 				27DD287D2FA277E200A9C851 /* Resources */,
+				FADC2F3B2FB365AD00AA77EE /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FADC2F352FB365AD00AA77EE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				27DD28812FA277E200A9C851 /* PhaseCheck */,
 			);
 			name = PhaseCheck;
 			packageProductDependencies = (
+				FADC2F212FB3654600AA77EE /* FirebaseCore */,
+				FADC2F232FB3654600AA77EE /* FirebaseRemoteConfig */,
+				FADC2F262FB3655500AA77EE /* AppsFlyerLib-Dynamic */,
+				FADC2F292FB3657500AA77EE /* FirebaseMessaging */,
 			);
 			productName = PhaseCheck;
 			productReference = 27DD287F2FA277E200A9C851 /* PhaseCheck.app */;
 			productType = "com.apple.product-type.application";
+		};
+		FADC2F2E2FB365AD00AA77EE /* NotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FADC2F372FB365AD00AA77EE /* Build configuration list for PBXNativeTarget "NotificationService" */;
+			buildPhases = (
+				FADC2F2B2FB365AD00AA77EE /* Sources */,
+				FADC2F2C2FB365AD00AA77EE /* Frameworks */,
+				FADC2F2D2FB365AD00AA77EE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FADC2F302FB365AD00AA77EE /* NotificationService */,
+			);
+			name = NotificationService;
+			packageProductDependencies = (
+			);
+			productName = NotificationService;
+			productReference = FADC2F2F2FB365AD00AA77EE /* NotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -90,11 +187,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2620;
+				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					27DD287E2FA277E200A9C851 = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					FADC2F2E2FB365AD00AA77EE = {
+						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
@@ -107,18 +207,30 @@
 			);
 			mainGroup = 27DD28762FA277E200A9C851;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				FADC2F202FB3654600AA77EE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				FADC2F252FB3655500AA77EE /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Dynamic" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 27DD28802FA277E200A9C851 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				27DD287E2FA277E200A9C851 /* PhaseCheck */,
+				FADC2F2E2FB365AD00AA77EE /* NotificationService */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		27DD287D2FA277E200A9C851 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FADC2F2D2FB365AD00AA77EE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +247,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FADC2F2B2FB365AD00AA77EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FADC2F352FB365AD00AA77EE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FADC2F2E2FB365AD00AA77EE /* NotificationService */;
+			targetProxy = FADC2F342FB365AD00AA77EE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		27DD28932FA277E300A9C851 /* Debug */ = {
@@ -143,7 +270,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_ENTITLEMENTS = PhaseCheck/PhaseCheck.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -151,14 +280,14 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Zeuphase Check";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evaprotkova;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -181,7 +310,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_ENTITLEMENTS = PhaseCheck/PhaseCheck.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -189,14 +320,14 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Zeuphase Check";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.evaprotkova;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -333,6 +464,72 @@
 			};
 			name = Release;
 		};
+		FADC2F382FB365AD00AA77EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evaprotkova.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		FADC2F392FB365AD00AA77EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NotificationService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evaprotkova.NotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -354,7 +551,58 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		FADC2F372FB365AD00AA77EE /* Build configuration list for PBXNativeTarget "NotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FADC2F382FB365AD00AA77EE /* Debug */,
+				FADC2F392FB365AD00AA77EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FADC2F202FB3654600AA77EE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.13.0;
+			};
+		};
+		FADC2F252FB3655500AA77EE /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Dynamic" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppsFlyerSDK/AppsFlyerFramework-Dynamic.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.18.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FADC2F212FB3654600AA77EE /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FADC2F202FB3654600AA77EE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		FADC2F232FB3654600AA77EE /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FADC2F202FB3654600AA77EE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		FADC2F262FB3655500AA77EE /* AppsFlyerLib-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FADC2F252FB3655500AA77EE /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Dynamic" */;
+			productName = "AppsFlyerLib-Dynamic";
+		};
+		FADC2F292FB3657500AA77EE /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FADC2F202FB3654600AA77EE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 27DD28772FA277E200A9C851 /* Project object */;
 }

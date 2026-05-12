@@ -12,6 +12,7 @@ struct LoadEditorView: View {
 
     let mode: LoadEditorMode
     @State private var draft: LoadDevice
+    @State private var tagsField: String = ""
     @State private var useCustomCos: Bool = false
     @State private var validationMessage: String?
 
@@ -51,6 +52,20 @@ struct LoadEditorView: View {
                             .foregroundStyle(PCColor.secondaryText)
                     }
                     Toggle("Include in calculation", isOn: $draft.isIncluded)
+                }
+                .listRowBackground(PCColor.layer)
+
+                Section("Tags & priority") {
+                    Picker("Priority", selection: $draft.priority) {
+                        ForEach(LoadPriority.allCases, id: \.self) { p in
+                            Text(p.title).tag(p)
+                        }
+                    }
+                    TextField("Tags (comma-separated)", text: $tagsField, axis: .vertical)
+                        .lineLimit(2...4)
+                    Text("Use short labels (e.g. fixed, kitchen). Shown in the loads list and PDF.")
+                        .font(.caption2)
+                        .foregroundStyle(PCColor.secondaryText)
                 }
                 .listRowBackground(PCColor.layer)
 
@@ -128,6 +143,7 @@ struct LoadEditorView: View {
         .navigationTitle(title)
         .onAppear {
             useCustomCos = draft.customPowerFactor != nil
+            tagsField = draft.tags.joined(separator: ", ")
         }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -165,6 +181,7 @@ struct LoadEditorView: View {
             draft.customPowerFactor = nil
         }
         draft.name = InputValidation.sanitizedName(draft.name, fallback: "Load")
+        draft.tags = InputValidation.normalizeTags(from: tagsField)
         if let err = InputValidation.validate(load: draft, context: project.context) {
             validationMessage = err
             return

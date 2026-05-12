@@ -2,7 +2,7 @@
 import SwiftUI
 
 private enum LoadSort: String, CaseIterable, Identifiable {
-    case name, currentDesc, phase, category
+    case name, currentDesc, phase, category, priority
     var id: String { rawValue }
     var title: String {
         switch self {
@@ -10,6 +10,7 @@ private enum LoadSort: String, CaseIterable, Identifiable {
         case .currentDesc: return "By current ↓"
         case .phase: return "By phase"
         case .category: return "By category"
+        case .priority: return "By priority ↓"
         }
     }
 }
@@ -18,13 +19,14 @@ struct LoadsListView: View {
     @EnvironmentObject private var store: AppDataStore
     @State private var filterPhase: PhaseLine?
     @State private var filterCategory: LoadCategory?
+    @State private var filterPriority: LoadPriority?
+    @State private var filterTag: String?
     @State private var sort: LoadSort = .name
     @State private var searchText = ""
     @State private var bulkMode = false
     @State private var bulkSelection: Set<UUID> = []
     @State private var showTemplates = false
     @State private var showEditor: LoadDevice?
-    @State private var showBulkPhasePicker = false
 
     var body: some View {
         NavigationStack {
@@ -35,6 +37,8 @@ struct LoadsListView: View {
                         Section {
                             phaseFilterChips
                             categoryFilterChips
+                            priorityFilterChips
+                            tagFilterChips(project)
                         }
                         .listRowBackground(Color.clear)
 
@@ -84,7 +88,7 @@ struct LoadsListView: View {
                 }
             }
             .navigationTitle("🔌 Loads")
-            .searchable(text: $searchText, prompt: "Search by name")
+            .searchable(text: $searchText, prompt: "Search name or tags")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     HStack(spacing: 4) {
@@ -200,6 +204,49 @@ struct LoadsListView: View {
         }
     }
 
+    private var priorityFilterChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                chip("All priorities", selected: filterPriority == nil) { filterPriority = nil }
+                ForEach(LoadPriority.allCases, id: \.self) { p in
+                    chip(p.title, selected: filterPriority == p) { filterPriority = p }
+                }
+            }
+        }
+    }
+
+    private func tagFilterChips(_ project: Project) -> some View {
+        let tags = allDistinctTags(in: project)
+        return Group {
+            if tags.isEmpty {
+                EmptyView()
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        chip("All tags", selected: filterTag == nil) { filterTag = nil }
+                        ForEach(tags, id: \.self) { t in
+                            chip(t, selected: filterTag == t) { filterTag = t }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func allDistinctTags(in project: Project) -> [String] {
+        var seen = Set<String>()
+        var ordered: [String] = []
+        for load in project.loads {
+            for t in load.tags {
+                let key = t.lowercased()
+                if seen.insert(key).inserted {
+                    ordered.append(t)
+                }
+            }
+        }
+        return ordered.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+    }
+
     private func chip(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(title)
@@ -221,7 +268,10 @@ struct LoadsListView: View {
         var list = filteredLoads(project)
         let q = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         if !q.isEmpty {
-            list = list.filter { $0.name.localizedCaseInsensitiveContains(q) }
+            list = list.filter { load in
+                if load.name.localizedCaseInsensitiveContains(q) { return true }
+                return load.tags.contains { $0.localizedCaseInsensitiveContains(q) }
+            }
         }
         switch sort {
         case .name:
@@ -235,6 +285,13 @@ struct LoadsListView: View {
             list.sort { $0.phase.rawValue < $1.phase.rawValue }
         case .category:
             list.sort { $0.category.title < $1.category.title }
+        case .priority:
+            list.sort {
+                if $0.priority.sortRank != $1.priority.sortRank {
+                    return $0.priority.sortRank > $1.priority.sortRank
+                }
+                return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+            }
         }
         return list
     }
@@ -243,6 +300,14 @@ struct LoadsListView: View {
         var list = project.loads
         if let cat = filterCategory {
             list = list.filter { $0.category == cat }
+        }
+        if let pr = filterPriority {
+            list = list.filter { $0.priority == pr }
+        }
+        if let tag = filterTag {
+            list = list.filter { load in
+                load.tags.contains { $0.caseInsensitiveCompare(tag) == .orderedSame }
+            }
         }
         if let f = filterPhase {
             list = list.filter { load in
@@ -271,6 +336,21 @@ struct LoadsListView: View {
                         .background(PCColor.structure.opacity(0.65))
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                         .foregroundStyle(PCColor.secondaryText)
+                    if load.priority != .normal {
+                        Text(load.priority.title)
+                            .font(.caption2.weight(.bold))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(priorityChipBackground(load.priority))
+                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                            .foregroundStyle(.white)
+                    }
+                }
+                if !load.tags.isEmpty {
+                    Text(load.tags.joined(separator: " · "))
+                        .font(.caption2)
+                        .foregroundStyle(PCColor.dataBlue.opacity(0.9))
+                        .lineLimit(2)
                 }
             }
             Spacer()
@@ -286,6 +366,15 @@ struct LoadsListView: View {
         .opacity(load.isIncluded ? 1 : 0.45)
     }
 
+    private func priorityChipBackground(_ p: LoadPriority) -> Color {
+        switch p {
+        case .low: return PCColor.structure.opacity(0.9)
+        case .normal: return PCColor.structure.opacity(0.9)
+        case .high: return PCColor.skew.opacity(0.55)
+        case .critical: return PCColor.critical.opacity(0.65)
+        }
+    }
+
     private func newDraftLoad() -> LoadDevice {
         LoadDevice(
             id: UUID(),
@@ -297,7 +386,9 @@ struct LoadsListView: View {
             currentAmps: 0,
             powerKW: 0,
             connectionKind: .singlePhase,
-            customPowerFactor: nil
+            customPowerFactor: nil,
+            tags: [],
+            priority: .normal
         )
     }
 
@@ -312,7 +403,9 @@ struct LoadsListView: View {
             currentAmps: t.defaultCurrentAmps,
             powerKW: t.defaultPowerKW,
             connectionKind: t.connectionKind,
-            customPowerFactor: t.customPowerFactor
+            customPowerFactor: t.customPowerFactor,
+            tags: [],
+            priority: .normal
         )
     }
 }

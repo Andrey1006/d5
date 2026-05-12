@@ -147,6 +147,17 @@ struct BalanceView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(load.name)
                                 .foregroundStyle(.white)
+                            if load.priority != .normal {
+                                Text(load.priority.title)
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(PCColor.skew.opacity(0.95))
+                            }
+                            if !load.tags.isEmpty {
+                                Text(load.tags.joined(separator: " · "))
+                                    .font(.caption2)
+                                    .foregroundStyle(PCColor.dataBlue.opacity(0.85))
+                                    .lineLimit(1)
+                            }
                             Text(BalanceCalculator.formatA(BalanceCalculator.resolvedLineCurrentAmps(for: load, context: project.context)))
                                 .font(.caption2.monospacedDigit())
                                 .foregroundStyle(PCColor.secondaryText)

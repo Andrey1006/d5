@@ -63,7 +63,9 @@ enum PDFReportBuilder {
                 let i = BalanceCalculator.resolvedLineCurrentAmps(for: load, context: project.context)
                 let on = load.isIncluded ? "" : " [off]"
                 let conn = load.connectionKind == .threePhaseBalanced ? "3φ" : "1φ \(load.phase.rawValue)"
-                draw("  • \(load.name)\(on) — \(conn) — \(BalanceCalculator.formatA(i)) — \(load.category.title)", monoAttrs)
+                let pri = load.priority == .normal ? "" : " · \(load.priority.title)"
+                let tagStr = load.tags.isEmpty ? "" : " · tags: \(load.tags.joined(separator: ", "))"
+                draw("  • \(load.name)\(on) — \(conn) — \(BalanceCalculator.formatA(i)) — \(load.category.title)\(pri)\(tagStr)", monoAttrs)
             }
             if !report.warnings.isEmpty {
                 y += 8

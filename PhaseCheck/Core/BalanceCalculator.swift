@@ -90,9 +90,7 @@ enum BalanceCalculator {
         guard maxV > 0.0001 else { return 0 }
         return (maxV - minV) / maxV * 100
     }
-
-    /// Neutral current magnitude (ideal 120° phase displacement, ignoring harmonics).
-    /// Formula: |In| = sqrt(Ia^2 + Ib^2 + Ic^2 - Ia*Ib - Ib*Ic - Ic*Ia)
+    
     static func neutralCurrentAmps(ampsByPhase: [PhaseLine: Double]) -> Double {
         let ia = max(0, ampsByPhase[.L1] ?? 0)
         let ib = max(0, ampsByPhase[.L2] ?? 0)
@@ -103,16 +101,12 @@ enum BalanceCalculator {
 
     private static let standardBreakerSeriesAmps: [Double] = [6, 10, 13, 16, 20, 25, 32, 40, 50, 63, 80, 100, 125]
 
-    /// Suggests a breaker nominal current from a standard series (rule-of-thumb).
-    /// Multiplier defaults to 1.25 for continuous-load margin; adjust if needed.
     static func suggestedBreakerAmps(forPhaseCurrentAmps iPhase: Double, multiplier: Double = 1.25) -> Double? {
         let target = max(0, iPhase) * max(1, multiplier)
         guard target > 0 else { return nil }
         return standardBreakerSeriesAmps.first(where: { $0 >= target }) ?? standardBreakerSeriesAmps.last
     }
 
-    /// Very rough minimum copper conductor cross-section suggestion by breaker rating.
-    /// This is intentionally conservative and MUST be verified with local code + installation method.
     static func suggestedCopperCableMm2(forBreakerAmps inAmps: Double) -> Double? {
         guard inAmps > 0 else { return nil }
         switch inAmps {

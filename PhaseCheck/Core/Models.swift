@@ -20,6 +20,35 @@ enum LoadCategory: String, Codable, CaseIterable {
     case lighting, outlets, hvac, motor, kitchen, other
 }
 
+enum LoadPriority: String, Codable, CaseIterable, Comparable {
+    case low
+    case normal
+    case high
+    case critical
+
+    var title: String {
+        switch self {
+        case .low: return "Low"
+        case .normal: return "Normal"
+        case .high: return "High"
+        case .critical: return "Critical"
+        }
+    }
+
+    var sortRank: Int {
+        switch self {
+        case .low: return 0
+        case .normal: return 1
+        case .high: return 2
+        case .critical: return 3
+        }
+    }
+
+    static func < (lhs: LoadPriority, rhs: LoadPriority) -> Bool {
+        lhs.sortRank < rhs.sortRank
+    }
+}
+
 struct LoadDevice: Identifiable, Equatable {
     var id: UUID
     var name: String
@@ -31,6 +60,8 @@ struct LoadDevice: Identifiable, Equatable {
     var powerKW: Double
     var connectionKind: LoadConnectionKind
     var customPowerFactor: Double?
+    var tags: [String]
+    var priority: LoadPriority
 
     func effectivePowerFactor(projectDefault: Double) -> Double {
         let raw = customPowerFactor ?? projectDefault
@@ -41,7 +72,7 @@ struct LoadDevice: Identifiable, Equatable {
 extension LoadDevice: Codable {
     private enum CodingKeys: String, CodingKey {
         case id, name, category, phase, isIncluded, inputKind, currentAmps, powerKW
-        case connectionKind, customPowerFactor
+        case connectionKind, customPowerFactor, tags, priority
     }
 
     init(from decoder: Decoder) throws {
@@ -56,6 +87,8 @@ extension LoadDevice: Codable {
         powerKW = try c.decode(Double.self, forKey: .powerKW)
         connectionKind = try c.decodeIfPresent(LoadConnectionKind.self, forKey: .connectionKind) ?? .singlePhase
         customPowerFactor = try c.decodeIfPresent(Double.self, forKey: .customPowerFactor)
+        tags = try c.decodeIfPresent([String].self, forKey: .tags) ?? []
+        priority = try c.decodeIfPresent(LoadPriority.self, forKey: .priority) ?? .normal
     }
 
     func encode(to encoder: Encoder) throws {
@@ -70,6 +103,8 @@ extension LoadDevice: Codable {
         try c.encode(powerKW, forKey: .powerKW)
         try c.encode(connectionKind, forKey: .connectionKind)
         try c.encodeIfPresent(customPowerFactor, forKey: .customPowerFactor)
+        try c.encode(tags, forKey: .tags)
+        try c.encode(priority, forKey: .priority)
     }
 }
 
